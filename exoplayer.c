@@ -6,29 +6,30 @@
 #include "stream_defs.h"
 
 void start_exoplayer() {
-	char command[200] = "cmd activity start-activity ";
+	char command[200] = "/system/bin/am start ";
 	strcat(command, COMP);
 	system(command);
 }
 
 void start_stream(char* url) {
-	char command[200] = "am start -a com.google.android.exoplayer.demo.action.VIEW -d ";
+	char command[300] = "/system/bin/am start -a com.google.android.exoplayer.demo.action.VIEW -d ";
 	strcat(command, url);
+	strcat(command, EXTRAS);
 	system(command);
 }
 
 void stop_stream() {
-	system("input keyevent 4");
+	system("/system/bin/input keyevent 4");
 }
 
 void stop_exoplayer() {
-	char command[200] = "am force-stop ";
+	char command[200] = "/system/bin/am force-stop ";
 	strcat(command, PKG);
 	system(command);
 }
 
 void unlock_screen() {
-	system("input touchscreen swipe 930 880 930 380");
+	system("/system/bin/input touchscreen swipe 930 880 930 380");
 }
 
 char* get_stream_name(stream stream_type, char* ret) {
@@ -195,25 +196,25 @@ void get_stream_list(stream* stream_list, int clear, int secure, int uhd) {
 	int n = 0;
 	if(clear) {
 		for(int i = WIDEVINE_DASH_H264_CLEAR_SD; i <= WIDEVINE_DASH_H265_CLEAR_SD_HD; i++) {
-			stream_list[i] = i;
+			stream_list[i - WIDEVINE_DASH_H264_CLEAR_SD] = i;
 			n++;
 		}
 	}
 	if(secure) {
 		for(int i = WIDEVINE_DASH_H264_SECURE_CENC_SD; i <= WIDEVINE_DASH_H265_SECURE_CENC_SD_HD; i++) {
-			stream_list[i] = i;
+			stream_list[i - WIDEVINE_DASH_H264_SECURE_CENC_SD] = i;
 			n++;
 		}
 	}
 	if(clear && uhd) {
 		for(int i = WIDEVINE_DASH_H264_CLEAR_UHD; i <= WIDEVINE_DASH_H265_CLEAR_UHD; i++) {
-			stream_list[i] = i;
+			stream_list[i - WIDEVINE_DASH_H264_CLEAR_UHD] = i;
 			n++;
 		}
 	}
 	if(secure && uhd) {
 		for(int i = WIDEVINE_DASH_H264_SECURE_CENC_UHD; i <= WIDEVINE_DASH_H265_SECURE_CENC_UHD; i++) {
-			stream_list[i] = i;
+			stream_list[i - WIDEVINE_DASH_H264_SECURE_CENC_UHD] = i;
 			n++;
 		}
 	}
