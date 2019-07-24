@@ -11,6 +11,7 @@
 #include "utils.h"
 
 int main(int argc, char *argv[]) {
+
 	int opt;
 	int repeat = DEFAULT_REPEAT;
 	int play_clear = 0;
@@ -91,23 +92,43 @@ int main(int argc, char *argv[]) {
 		printf("-------- TESTING %s -------- \n", testcase);
 
 		start_exoplayer();
+
 		for(int i = 0; i < repeat; i++) {
+			// waiting to let time to fully open expolayer app
 			setTimeout(DEFAULT_WAIT);
 			printf("-------- MEASURE %d -------- \n", i + 1);
+			// retrieve info before playing stream
 			start_measure = perform_measure(heap_path, heap_data);
+			// exporting heap info before playing stream
+			export_info(heap_path);
 			printf("[INFO] Value before playback: %d \n", start_measure);
+			// starting stream and exporting heap info every sec
 			start_stream(url);
-			setTimeout(DEFAULT_PLAYTIME);
+			for(int i = 0; i < DEFAULT_PLAYTIME_SEC; i++) {
+				export_info(heap_path);
+				setTimeout(1000);
+			}
 			stop_stream();
+			
 			setTimeout(DEFAULT_WAIT);
+			// retrieve info after stopping stream
 			end_measure = perform_measure(heap_path, heap_data);
+			// exporting heap info after stopping stream
+			export_info(heap_path);
 			printf("[INFO] Value after playback: %d \n", end_measure);
+			// interpretation of the result
 			if( (end_measure - start_measure) > 0 ) {
 				warning++;
 				printf("[WARNING] Leak behavior detected. \n");
 			}
 			else if ( (end_measure - start_measure) < 0) {
-				warning--;
+				if(end_measure == 0) {
+					// all memory has been released, we can reset warnings
+					warning = 0;
+				}
+				else {
+					warning--;
+				}
 				printf("[INFO] Memory has been tardily released. \n");
 			}
 			printf("-------- DIFFERENCE MEASURED %d -------- \n", end_measure - start_measure);

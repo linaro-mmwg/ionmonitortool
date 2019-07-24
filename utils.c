@@ -80,3 +80,52 @@ int write_line_to_file(char* file_path, char* str) {
 	fclose(fp);
 	return ret;
 }
+
+int append_line_to_file(char* file_path, char* str) {
+	FILE *fp = fopen(file_path, "a");
+    int ret = -1;
+
+	if(fp == NULL) {
+		printf("%s : File %s couldn't be opened.\n", __func__, file_path);
+		return ret;
+	} 
+	ret = fprintf(fp, "%s", str);
+	fclose(fp);
+	return ret;
+}
+
+void export_info(char* heap_path) {
+	char str[50] = "";
+
+	int allocated_size;
+	int free_size;
+	int allocated_peak;
+	int largest_free_buffer;
+	int heap_fragmentation;
+
+	time_t rawtime;
+	struct tm* timestamp;
+	time(&rawtime);
+	timestamp = localtime(&rawtime);
+
+	allocated_size = get_info_value(heap_path, "allocated size", 2);
+	free_size = get_info_value(heap_path, "free size", 2);
+	allocated_peak = get_info_value(heap_path, "allocated peak", 2);
+	largest_free_buffer = get_info_value(heap_path, "largest free buffer", 3);
+	heap_fragmentation = get_info_value(heap_path, "heap fragmentation", 2);
+
+	sprintf(str, "%d:%d:%d %d\n", timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec, allocated_size);
+	append_line_to_file("allocated_size.log", str);
+
+	sprintf(str, "%d:%d:%d %d\n", timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec, free_size);
+	append_line_to_file("free_size.log", str);
+
+	sprintf(str, "%d:%d:%d %d\n", timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec, allocated_peak);
+	append_line_to_file("allocated_peak.log", str);
+
+	sprintf(str, "%d:%d:%d %d\n", timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec, largest_free_buffer);
+	append_line_to_file("largest_free_buffer.log", str);
+
+	sprintf(str, "%d:%d:%d %d\n", timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec, heap_fragmentation);
+	append_line_to_file("heap_fragmentation.log", str);
+}

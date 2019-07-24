@@ -196,25 +196,25 @@ void get_stream_list(stream* stream_list, int clear, int secure, int uhd) {
 	int n = 0;
 	if(clear) {
 		for(int i = WIDEVINE_DASH_H264_CLEAR_SD; i <= WIDEVINE_DASH_H265_CLEAR_SD_HD; i++) {
-			stream_list[i - WIDEVINE_DASH_H264_CLEAR_SD] = i;
+			stream_list[n] = i;
 			n++;
 		}
 	}
 	if(secure) {
 		for(int i = WIDEVINE_DASH_H264_SECURE_CENC_SD; i <= WIDEVINE_DASH_H265_SECURE_CENC_SD_HD; i++) {
-			stream_list[i - WIDEVINE_DASH_H264_SECURE_CENC_SD] = i;
+			stream_list[n] = i;
 			n++;
 		}
 	}
 	if(clear && uhd) {
 		for(int i = WIDEVINE_DASH_H264_CLEAR_UHD; i <= WIDEVINE_DASH_H265_CLEAR_UHD; i++) {
-			stream_list[i - WIDEVINE_DASH_H264_CLEAR_UHD] = i;
+			stream_list[n] = i;
 			n++;
 		}
 	}
 	if(secure && uhd) {
 		for(int i = WIDEVINE_DASH_H264_SECURE_CENC_UHD; i <= WIDEVINE_DASH_H265_SECURE_CENC_UHD; i++) {
-			stream_list[i - WIDEVINE_DASH_H264_SECURE_CENC_UHD] = i;
+			stream_list[n] = i;
 			n++;
 		}
 	}

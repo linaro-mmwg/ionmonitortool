@@ -146,15 +146,11 @@ INFO : gives information about the test, like values measured.
 WARNING : only used when leak behavior has been detected.  
 RESULT : gives test case result, this is what you want to parse if you want to get results easily.  
 
-## Known issues
+## Log files
 
-The warning system is not perfect.  
-Indeed, when memory is tardily released, only one warning is removed, even if we release all memory accumulated through many playbacks.  
-Example :  
- 500 ko of memory left -> warning++  
- 500 ko of memory left -> warning++  
- 1000 ko of memory tardily released -> warning--  
- Finally : 1 warning but all memory released.  
+The tool will also dump heap informations in seperated log files, including timestamps.  
+The files are created in the same directory the tool is in.  
+This feature is useful for developers who wants to trace graphs after the test, you only have to import it in Excel for example.  
 
 ## Impact on performances
 
@@ -170,7 +166,7 @@ The patches are available on this repository :
 https://github.com/axelnxp/linux-imx/tree/imx_4.14.98_2.0.0_ga  
 
 The following commit gives all patches needed to enable debug info in the ION driver :  
-https://github.com/axelnxp/linux-imx/commit/3aa953906861a0026941a97608da140dc761031b  
+https://github.com/axelnxp/linux-imx/commit/f85d8b4c8cb94dd8adb020f15d4b1ae7a16ff16b  
 
 Exoplayer needs to be installed in the Android image, and an internet connection is required.  
 It has been tested on NXP's imx8m.  
@@ -178,6 +174,3 @@ It has been tested on NXP's imx8m.
 ## Maintainers
 
 * Axel Le Bourhis <mailto:axel.lebourhis@linaro.org>  
-
-
-
